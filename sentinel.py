@@ -24,22 +24,22 @@ def post_alert(card_name, timestamp):
         return
 
     payload = {
-        "content": "@everyone 🚨 **RESTOCK DROP DETECTED!** 🚨",
+        "content": "@everyone **[RESTOCK ALERT]**",
         "embeds": [
             {
-                "title": f"🎉 {card_name.upper()} IS IN STOCK!",
+                "title": f"Restock Detected: {card_name.upper()}",
                 "description": (
-                    "A restock just dropped in the **Microsoft Rewards India** catalog.\n"
-                    "Claim your voucher before the batch gets drained!"
+                    "A voucher restock has been indexed in the Microsoft Rewards (India) catalog.\n"
+                    "The item is currently available for redemption."
                 ),
                 "url": CATALOG_URL,
-                "color": 5763719,  # Green
+                "color": 15844367,  # Professional Gold/Yellow (#F1C40F)
                 "fields": [
-                    {"name": "🏷️ Card", "value": f"`{card_name.upper()}`", "inline": True},
-                    {"name": "⏰ Detected At (UTC)", "value": f"`{timestamp}`", "inline": True},
-                    {"name": "🔗 Link", "value": f"[Open Rewards Store]({CATALOG_URL})", "inline": False}
+                    {"name": "Item", "value": f"`{card_name.upper()}`", "inline": True},
+                    {"name": "Timestamp (UTC)", "value": f"`{timestamp}`", "inline": True},
+                    {"name": "Redemption Link", "value": f"[Access Microsoft Rewards Catalog]({CATALOG_URL})", "inline": False}
                 ],
-                "footer": {"text": "GitHub Actions Cloud Runner • MS Rewards Sentinel"}
+                "footer": {"text": "Microsoft Rewards Inventory Monitor • Automated Notification"}
             }
         ]
     }
@@ -56,7 +56,7 @@ def post_alert(card_name, timestamp):
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == "--test":
         print("[*] TEST MODE: Dispatching test alert to Discord...")
-        post_alert("FLIPKART (TEST RUN)", datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"))
+        post_alert("FLIPKART (TEST)", datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"))
         return
 
     print(f"[*] Starting scan at {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}...")
