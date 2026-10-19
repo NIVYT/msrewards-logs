@@ -4,7 +4,13 @@ on:
   schedule:
     # Runs automatically every 5 minutes in GitHub's cloud
     - cron: '*/5 * * * *'
-  workflow_dispatch: # Allows manual trigger from GitHub Actions UI
+  workflow_dispatch:
+    inputs:
+      test_alert:
+        description: 'Send test alert to Discord'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   check-rewards:
@@ -24,4 +30,9 @@ jobs:
       - name: Run Restock Check
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        run: python sentinel.py
+        run: |
+          if [ "${{ inputs.test_alert }}" = "true" ]; then
+            python sentinel.py --test
+          else
+            python sentinel.py
+          fi

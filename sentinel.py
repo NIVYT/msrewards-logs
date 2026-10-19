@@ -54,6 +54,11 @@ def post_alert(card_name, timestamp):
         print(f"[-] Failed to deliver Discord webhook: {e}")
 
 def main():
+    if len(sys.argv) > 1 and sys.argv[1] == "--test":
+        print("[*] TEST MODE: Dispatching test alert to Discord...")
+        post_alert("FLIPKART (TEST RUN)", datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"))
+        return
+
     print(f"[*] Starting scan at {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}...")
     
     try:
