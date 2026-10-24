@@ -1,6 +1,6 @@
 # Microsoft Rewards India Restock Sentinel
 
-Automated, 0-risk sentinel running via GitHub Actions on a 5-minute cron schedule.
+Automated, 0-risk sentinel running via GitHub Actions on a 30-minute cron schedule.
 Monitors the public Microsoft Rewards India shop catalog and dispatches Discord embeds the instant high-value third-party gift cards (Amazon Pay, Flipkart, Croma, BookMyShow, etc.) drop back into stock.
 
 ## How it Works

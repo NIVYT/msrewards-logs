@@ -2,8 +2,8 @@ name: MS Rewards Restock Check
 
 on:
   schedule:
-    # Runs automatically every 5 minutes in GitHub's cloud
-    - cron: '*/5 * * * *'
+    # Runs automatically every 30 minutes in GitHub's cloud
+    - cron: '*/30 * * * *'
   workflow_dispatch:
     inputs:
       test_alert:
@@ -26,6 +26,14 @@ jobs:
 
       - name: Install Dependencies
         run: pip install -r requirements.txt
+
+      - name: Restore Restock State
+        uses: actions/cache@v4
+        with:
+          path: state.json
+          key: restock-state-${{ github.run_id }}
+          restore-keys: |
+            restock-state-
 
       - name: Run Restock Check
         env:
