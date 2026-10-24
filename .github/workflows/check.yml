@@ -4,6 +4,8 @@ on:
   schedule:
     # Runs automatically every 30 minutes in GitHub's cloud
     - cron: '*/30 * * * *'
+  push:
+    branches: [ main ]
   workflow_dispatch:
     inputs:
       test_alert:
