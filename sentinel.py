@@ -22,6 +22,12 @@ WATCHLIST = [
     "lifestyle", "myntra", "uber", "pantaloons", "zomato"
 ]
 
+# High-priority direct redemption SKUs (scanned directly even if unlisted in catalog grid)
+DIRECT_SKU_URLS = [
+    "https://rewards.bing.com/redeem/sku/000885000034",  # Flipkart Gift Card
+    "https://rewards.bing.com/redeem/sku/000885000031",  # Amazon Pay Gift Card India
+]
+
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
     "Accept-Language": "en-IN,en;q=0.9",
@@ -123,19 +129,18 @@ def verify_sku_stock(sku_href, session):
 def is_item_in_stock(item, session):
     """
     Evaluates whether a catalog item is truly in stock.
-    - In Microsoft Rewards, out-of-stock items have `isDisabled: True` (boolean True).
-    - Available items have `isDisabled: "$undefined"` or `False`/`None`.
-    - If potentially in stock, double-checks the SKU page to be 100% certain.
+    - If an href (direct SKU redemption link) is available, ALWAYS checks the live SKU page
+      because the SKU redemption page reflects real-time inventory faster than the CDN-cached catalog grid.
+    - An item is in stock if any denomination has isDisabled != True and no restocking notice.
     """
-    # 1. Direct isDisabled check from catalog data
-    if item.get('isDisabled') is True:
-        return False, "Catalog item isDisabled: True", []
-
-    # 2. Check SKU page if link is available
     href = item.get('href')
     if href:
         in_stock, reason, verified = verify_sku_stock(href, session)
         return in_stock, reason, verified
+
+    # Fallback if no SKU link: check catalog isDisabled property
+    if item.get('isDisabled') is True:
+        return False, "Catalog item isDisabled: True", []
 
     return True, "Catalog item enabled (no SKU link)", [item]
 
@@ -220,7 +225,23 @@ def main():
         except requests.exceptions.RequestException as e:
             print(f"[-] Network connection error while checking {url}: {e}")
 
-    print(f"[*] Indexed {len(catalog_items)} total catalog items.")
+    # Also scan high-priority direct SKU URLs (e.g., Flipkart, Amazon Pay) directly
+    for sku_url in DIRECT_SKU_URLS:
+        try:
+            res = session.get(sku_url, headers=HEADERS, timeout=12)
+            if res.status_code == 200:
+                extracted = extract_items_from_html(res.text)
+                for it in extracted:
+                    key = it.get('id') or it.get('title')
+                    # Ensure href is set for SKU page item
+                    if not it.get('href'):
+                        it['href'] = sku_url.replace("https://rewards.bing.com", "")
+                    if not any((x.get('id') or x.get('title')) == key for x in catalog_items):
+                        catalog_items.append(it)
+        except requests.exceptions.RequestException as e:
+            print(f"[-] Warning: Failed checking direct SKU {sku_url}: {e}")
+
+    print(f"[*] Indexed {len(catalog_items)} total catalog and direct SKU items.")
 
     matched_watchlist_items = []
 
