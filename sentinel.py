@@ -186,14 +186,13 @@ def post_alert(card_title, full_title, points, redeem_url, image_url, timestamp)
         "title": display_title,
         "url": direct_link,
         "color": 3900150,  # Modern Bento Blue (#3B82F6)
-        "fields": [
-            {"name": "Denomination", "value": f"`{denomination}`", "inline": True},
-            {"name": "Points", "value": f"`{points_display}`", "inline": True},
-            {"name": "Status", "value": "`🟢 In Stock`", "inline": True},
-            {"name": "Detected", "value": f"<t:{epoch_now}:R>", "inline": True},
-            {"name": "Redemption Link", "value": f"[**Click to Redeem on Store ➔**]({direct_link})", "inline": False}
-        ],
-        "footer": {"text": "Microsoft Rewards India • Live Verified Stock"}
+        "description": (
+            f">>> **Denomination:** `{denomination}`\n"
+            f"**Required Points:** `{points_display}`\n"
+            f"**Live Status:** `🟢 In Stock`\n"
+            f"**Detected:** <t:{epoch_now}:R>"
+        ),
+        "footer": {"text": "Microsoft Rewards India • Verified Stock"}
     }
 
     if image_url:
@@ -246,8 +245,8 @@ def main():
     if len(sys.argv) > 1 and sys.argv[1] == "--test":
         print("[*] TEST MODE: Dispatching test in-stock alert to Discord...")
         post_alert(
-            card_title="Flipkart Gift Card (TEST)",
-            full_title="₹1000 Flipkart Gift Card [TEST MODE]",
+            card_title="Flipkart Gift Card",
+            full_title="₹1,000 Flipkart Gift Card",
             points=19320,
             redeem_url="https://rewards.bing.com/redeem/sku/000885000034",
             image_url="https://bing.com/th?id=OMR.Redeem.Flipkart.jpg&pid=Rewards",
