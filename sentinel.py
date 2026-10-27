@@ -158,8 +158,9 @@ def clean_text(text):
 
 def post_alert(card_title, full_title, points, redeem_url, image_url, timestamp):
     """
-    Dispatches Design #4: Modern Bento Grid notification.
-    Clean, zero AI slop, no emoji spam, Discord relative timestamps, and native 1-tap claim button.
+    Dispatches a high-impact Visual Banner notification to Discord.
+    Zero text bloat, no ugly squished columns, full-width Flipkart graphic banner,
+    and a native 1-tap claim button.
     """
     if not DISCORD_WEBHOOK_URL:
         print("[-] Warning: DISCORD_WEBHOOK_URL secret not set. Skipping webhook notification.")
@@ -170,7 +171,6 @@ def post_alert(card_title, full_title, points, redeem_url, image_url, timestamp)
     display_title = clean_full or clean_card or "Flipkart Gift Card"
     points_display = f"{points:,} pts" if isinstance(points, (int, float)) and points > 0 else "See Catalog"
     direct_link = redeem_url if redeem_url else CATALOG_URL
-    epoch_now = int(time.time())
 
     # Extract clean denomination (e.g., ₹1,000)
     denomination = "₹1,000"
@@ -182,24 +182,24 @@ def post_alert(card_title, full_title, points, redeem_url, image_url, timestamp)
             denomination = f"₹{int(part):,}"
             break
 
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    banner_local_path = os.path.join(base_dir, "assets", "flipkart_banner.jpg")
+    has_local_banner = os.path.exists(banner_local_path) and "flipkart" in display_title.lower()
+
     embed = {
-        "title": display_title,
+        "title": f"{denomination} Flipkart Gift Card ({points_display})",
         "url": direct_link,
-        "color": 3900150,  # Modern Bento Blue (#3B82F6)
-        "description": (
-            f">>> **Denomination:** `{denomination}`\n"
-            f"**Required Points:** `{points_display}`\n"
-            f"**Live Status:** `🟢 In Stock`\n"
-            f"**Detected:** <t:{epoch_now}:R>"
-        ),
-        "footer": {"text": "Microsoft Rewards India • Verified Stock"}
+        "color": 2651376,  # Flipkart Royal Blue (#2874F0)
+        "footer": {"text": "Microsoft Rewards India • Live Verified Stock"}
     }
 
-    if image_url:
-        embed["thumbnail"] = {"url": image_url}
+    if has_local_banner:
+        embed["image"] = {"url": "attachment://flipkart_banner.jpg"}
+    elif image_url:
+        embed["image"] = {"url": image_url}
 
     payload = {
-        "content": f"@everyone **{clean_card or 'Gift Card'} Restocked**",
+        "content": f"@everyone **{clean_card or 'Flipkart'} Restocked!**",
         "embeds": [embed],
         "components": [
             {
@@ -217,20 +217,30 @@ def post_alert(card_title, full_title, points, redeem_url, image_url, timestamp)
     }
 
     try:
-        # Append ?with_components=true to ensure Discord processes message components
         webhook_endpoint = DISCORD_WEBHOOK_URL
         if "with_components" not in webhook_endpoint:
             delim = "&" if "?" in webhook_endpoint else "?"
             webhook_endpoint = f"{webhook_endpoint}{delim}with_components=true"
 
-        res = requests.post(webhook_endpoint, json=payload, timeout=10)
+        if has_local_banner:
+            with open(banner_local_path, "rb") as f:
+                files = {"files[0]": ("flipkart_banner.jpg", f, "image/jpeg")}
+                res = requests.post(webhook_endpoint, data={"payload_json": json.dumps(payload)}, files=files, timeout=12)
+        else:
+            res = requests.post(webhook_endpoint, json=payload, timeout=10)
+
         if res.status_code in (200, 204):
             print(f"[+] Alert successfully sent to Discord for: {display_title}")
         else:
-            # Fallback without components if webhook endpoint strictly rejects them
-            print(f"[-] Discord returned HTTP {res.status_code}, retrying without components...")
+            print(f"[-] Discord returned HTTP {res.status_code}, retrying fallback...")
             payload_fallback = {"content": payload["content"], "embeds": payload["embeds"]}
-            res_fb = requests.post(DISCORD_WEBHOOK_URL, json=payload_fallback, timeout=10)
+            if has_local_banner:
+                with open(banner_local_path, "rb") as f:
+                    files = {"files[0]": ("flipkart_banner.jpg", f, "image/jpeg")}
+                    res_fb = requests.post(DISCORD_WEBHOOK_URL, data={"payload_json": json.dumps(payload_fallback)}, files=files, timeout=12)
+            else:
+                res_fb = requests.post(DISCORD_WEBHOOK_URL, json=payload_fallback, timeout=10)
+
             if res_fb.status_code in (200, 204):
                 print(f"[+] Fallback alert successfully sent to Discord for: {display_title}")
             else:
