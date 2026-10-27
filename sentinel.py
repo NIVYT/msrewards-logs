@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import re
+import time
 import requests
 from datetime import datetime, timezone
 
@@ -144,49 +145,97 @@ def is_item_in_stock(item, session):
 
     return True, "Catalog item enabled (no SKU link)", [item]
 
+def clean_text(text):
+    """Sanitizes text and permanently fixes UTF-8 mojibake (e.g. â‚¹ / Â¤¹ -> ₹)."""
+    if not text:
+        return ""
+    try:
+        text = text.encode('latin1').decode('utf-8')
+    except Exception:
+        pass
+    text = text.replace('â\x82¹', '₹').replace('â¤¹', '₹').replace('Â¤¹', '₹').replace('â—', '—')
+    return text.strip()
+
 def post_alert(card_title, full_title, points, redeem_url, image_url, timestamp):
-    """Dispatches a rich embed notification to Discord."""
+    """
+    Dispatches Design #4: Modern Bento Grid notification.
+    Clean, zero AI slop, no emoji spam, Discord relative timestamps, and native 1-tap claim button.
+    """
     if not DISCORD_WEBHOOK_URL:
         print("[-] Warning: DISCORD_WEBHOOK_URL secret not set. Skipping webhook notification.")
         return
 
-    display_title = full_title or card_title or "Gift Card"
+    clean_full = clean_text(full_title)
+    clean_card = clean_text(card_title)
+    display_title = clean_full or clean_card or "Flipkart Gift Card"
     points_display = f"{points:,} pts" if isinstance(points, (int, float)) and points > 0 else "See Catalog"
     direct_link = redeem_url if redeem_url else CATALOG_URL
+    epoch_now = int(time.time())
+
+    # Extract clean denomination (e.g., ₹1,000)
+    denomination = "₹1,000"
+    for part in display_title.split():
+        if "₹" in part:
+            denomination = part
+            break
+        elif part.isdigit() and int(part) in (250, 500, 1000, 1500, 2000, 5000):
+            denomination = f"₹{int(part):,}"
+            break
 
     embed = {
-        "title": f"🎉 RESTOCK DETECTED: {display_title.upper()}",
-        "description": (
-            "A voucher restock has been confirmed in the **Microsoft Rewards India** catalog!\n"
-            "This item is **IN STOCK** and currently available for redemption."
-        ),
+        "title": display_title,
         "url": direct_link,
-        "color": 3066993,  # Emerald Green (#2ECC71)
+        "color": 3900150,  # Modern Bento Blue (#3B82F6)
         "fields": [
-            {"name": "🏷️ Item", "value": f"**{display_title}**", "inline": True},
-            {"name": "🪙 Cost", "value": f"`{points_display}`", "inline": True},
-            {"name": "📦 Status", "value": "`🟢 IN STOCK`", "inline": True},
-            {"name": "⏰ Detected At (UTC)", "value": f"`{timestamp}`", "inline": True},
-            {"name": "⚡ Direct Redeem Link", "value": f"[Redeem Now on Microsoft Rewards]({direct_link})", "inline": False},
-            {"name": "🛒 Store Catalog", "value": f"[Browse India Catalog]({CATALOG_URL})", "inline": False}
+            {"name": "Denomination", "value": f"`{denomination}`", "inline": True},
+            {"name": "Points", "value": f"`{points_display}`", "inline": True},
+            {"name": "Status", "value": "`🟢 In Stock`", "inline": True},
+            {"name": "Detected", "value": f"<t:{epoch_now}:R>", "inline": True},
+            {"name": "Redemption Link", "value": f"[**Click to Redeem on Store ➔**]({direct_link})", "inline": False}
         ],
-        "footer": {"text": "Microsoft Rewards Inventory Sentinel • Verified In-Stock"}
+        "footer": {"text": "Microsoft Rewards India • Live Verified Stock"}
     }
 
     if image_url:
         embed["thumbnail"] = {"url": image_url}
 
     payload = {
-        "content": "🚨 @everyone **[RESTOCK DROP IN STOCK!]** 🚨",
-        "embeds": [embed]
+        "content": f"@everyone **{clean_card or 'Gift Card'} Restocked**",
+        "embeds": [embed],
+        "components": [
+            {
+                "type": 1,
+                "components": [
+                    {
+                        "type": 2,
+                        "style": 5,
+                        "label": f"⚡ Claim {denomination} on Store ↗",
+                        "url": direct_link
+                    }
+                ]
+            }
+        ]
     }
 
     try:
-        res = requests.post(DISCORD_WEBHOOK_URL, json=payload, timeout=10)
+        # Append ?with_components=true to ensure Discord processes message components
+        webhook_endpoint = DISCORD_WEBHOOK_URL
+        if "with_components" not in webhook_endpoint:
+            delim = "&" if "?" in webhook_endpoint else "?"
+            webhook_endpoint = f"{webhook_endpoint}{delim}with_components=true"
+
+        res = requests.post(webhook_endpoint, json=payload, timeout=10)
         if res.status_code in (200, 204):
             print(f"[+] Alert successfully sent to Discord for: {display_title}")
         else:
-            print(f"[-] Discord error: HTTP {res.status_code} - {res.text}")
+            # Fallback without components if webhook endpoint strictly rejects them
+            print(f"[-] Discord returned HTTP {res.status_code}, retrying without components...")
+            payload_fallback = {"content": payload["content"], "embeds": payload["embeds"]}
+            res_fb = requests.post(DISCORD_WEBHOOK_URL, json=payload_fallback, timeout=10)
+            if res_fb.status_code in (200, 204):
+                print(f"[+] Fallback alert successfully sent to Discord for: {display_title}")
+            else:
+                print(f"[-] Discord error: HTTP {res_fb.status_code} - {res_fb.text}")
     except Exception as e:
         print(f"[-] Failed to deliver Discord webhook: {e}")
 

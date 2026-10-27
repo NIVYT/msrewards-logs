@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MS Rewards India • 20 Discord Restock Alert Prototypes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #1e1f22;
+            --bg-secondary: #2b2d31;
+            --bg-chat: #313338;
+            --bg-embed: #2b2d31;
+            --text-normal: #dbdee1;
+            --text-muted: #949ba4;
+            --text-header: #f2f3f5;
+            --accent-blue: #5865f2;
+            --accent-green: #23a55a;
+            --accent-yellow: #f0b232;
+            --accent-red: #f23f43;
+            --fk-blue: #2874f0;
+            --fk-yellow: #ffe11b;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: #111214;
+            color: var(--text-normal);
+            line-height: 1.5;
+            padding-bottom: 80px;
+        }
+
+        /* Top sticky navigation */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(17, 18, 20, 0.92);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .badge-pill {
+            background: rgba(88, 101, 242, 0.15);
+            color: #5865f2;
+            border: 1px solid rgba(88, 101, 242, 0.3);
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn:hover {
+            color: #fff;
+            background: #35373c;
+        }
+
+        .filter-btn.active {
+            background: var(--accent-blue);
+            color: #fff;
+            border-color: var(--accent-blue);
+            box-shadow: 0 4px 14px rgba(88, 101, 242, 0.4);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 32px auto;
+            padding: 0 24px;
+        }
+
+        .intro-banner {
+            background: linear-gradient(135deg, rgba(40, 116, 240, 0.12) 0%, rgba(88, 101, 242, 0.12) 100%);
+            border: 1px solid rgba(40, 116, 240, 0.25);
+            border-radius: 14px;
+            padding: 20px 24px;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .intro-text h2 {
+            font-size: 16px;
+            color: #fff;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .intro-text p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .view-toggle {
+            display: flex;
+            background: var(--bg-primary);
+            padding: 4px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .view-btn {
+            padding: 6px 14px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .view-btn.active {
+            background: var(--bg-secondary);
+            color: #fff;
+        }
+
+        /* Grid */
+        .designs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+            gap: 24px;
+        }
+
+        .designs-grid.compact-view {
+            grid-template-columns: 1fr;
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        /* Card Cardboard */
+        .design-card {
+            background: var(--bg-chat);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+        }
+
+        .design-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.18);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-header-bar {
+            padding: 10px 16px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .design-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent-yellow);
+            background: rgba(240, 178, 50, 0.12);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .design-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            margin-left: 8px;
+        }
+
+        .design-tag {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Discord message simulation */
+        .discord-msg {
+            padding: 16px;
+            display: flex;
+            gap: 14px;
+            flex: 1;
+        }
+
+        .discord-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            background: #2874f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 15px;
+            color: #fff;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .discord-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .discord-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .discord-author {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .author-name {
+            font-weight: 700;
+            font-size: 15px;
+            color: #fff;
+        }
+
+        .bot-tag {
+            background: #5865f2;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 1px 4.5px;
+            border-radius: 3px;
+            text-transform: uppercase;
+            line-height: 1.3;
+        }
+
+        .msg-time {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-left: 4px;
+        }
+
+        .ping-line {
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: var(--text-normal);
+        }
+
+        .mention-tag {
+            background: rgba(88, 101, 242, 0.3);
+            color: #c9cdfb;
+            padding: 0 4px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        /* Embed Container */
+        .embed {
+            background: var(--bg-embed);
+            border-radius: 4px;
+            border-left: 4px solid #2874f0;
+            padding: 12px 16px;
+            max-width: 520px;
+            position: relative;
+        }
+
+        .embed-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .embed-title:hover {
+            text-decoration: underline;
+        }
+
+        .embed-desc {
+            font-size: 13.5px;
+            color: var(--text-normal);
+            margin-bottom: 10px;
+        }
+
+        .embed-footer {
+            font-size: 11.5px;
+            color: var(--text-muted);
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Action buttons below embed */
+        .button-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .discord-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: filter 0.2s;
+            border: none;
+        }
+
+        .discord-btn:hover {
+            filter: brightness(1.15);
+        }
+
+        .btn-link {
+            background: #4e5058;
+            color: #fff;
+        }
+
+        .btn-primary {
+            background: #5865f2;
+            color: #fff;
+        }
+
+        .btn-success {
+            background: #23a55a;
+            color: #fff;
+        }
+
+        .btn-fk {
+            background: #2874f0;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        /* Card footer action */
+        .card-action-bar {
+            padding: 10px 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .select-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .select-btn:hover {
+            background: #5865f2;
+            border-color: #5865f2;
+        }
+
+        /* Specialized Design Variants */
+
+        /* Design 1: Ultra Stealth */
+        .d1-embed {
+            border-left: 3px solid #10b981;
+            background: #232428;
+        }
+        .d1-spec {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #a1a1aa;
+            display: flex;
+            gap: 16px;
+            margin-top: 4px;
+        }
+
+        /* Design 2: Flipkart Official */
+        .d2-embed {
+            border-left: 4px solid #2874f0;
+            background: #242730;
+        }
+        .fk-pill {
+            display: inline-block;
+            background: #ffe11b;
+            color: #111;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-bottom: 6px;
+        }
+
+        /* Design 3: Terminal Hacker HUD */
+        .d3-embed {
+            border-left: 3px solid #00ff66;
+            background: #141716;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .term-green { color: #00ff66; }
+        .term-dim { color: #52796f; }
+
+        /* Design 4: Sleek Glassmorphism */
+        .d4-embed {
+            border-left: 3px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(8px);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Design 5: SneakerBot / AIO Drop */
+        .d5-embed {
+            border-left: 4px solid #ff4655;
+            background: #1f1f26;
+        }
+        .hype-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin: 8px 0;
+            font-size: 12px;
+        }
+
+        /* Design 6: Discord Native Physical Button Focus */
+        .d6-embed {
+            border-left: 3px solid #5865f2;
+        }
+
+        /* Design 7: 1-Line Speedrun Ticker */
+        .d7-ticker {
+            background: #1a1c1e;
+            border-left: 3px solid #00e5ff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12.5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Design 8: Cyberpunk 2077 */
+        .d8-embed {
+            border-left: 4px solid #fcee0a;
+            background: #19131d;
+            border-right: 2px solid #00f0ff;
+        }
+
+        /* Design 9: Bloomberg Finance Ticker */
+        .d9-embed {
+            border-left: 3px solid #ff9900;
+            background: #12161a;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Design 10: Legendary RPG Loot */
+        .d10-embed {
+            border: 1px solid #e5a93b;
+            border-left: 4px solid #ffb703;
+            background: linear-gradient(135deg, rgba(255, 183, 3, 0.08) 0%, rgba(20, 20, 20, 0.95) 100%);
+            box-shadow: 0 0 20px rgba(255, 183, 3, 0.15);
+        }
+
+        /* Design 11: Pure CLI Raw Text (No Embed) */
+        .raw-text-box {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            background: #18191c;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 12px 14px;
+            border-radius: 6px;
+            color: #dcdcdc;
+            line-height: 1.6;
+        }
+
+        /* Design 12: Bento Grid Style */
+        .bento-box {
+            display: flex;
+            gap: 8px;
+            margin: 8px 0;
+        }
+        .bento-item {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 10px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .bento-label { font-size: 10px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; }
+        .bento-val { font-size: 14px; font-weight: 700; color: #fff; margin-top: 2px; }
+
+        /* Toast notification */
+        #toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #23a55a;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        #toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Modal for Selected Code */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-box {
+            background: #2b2d31;
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            max-width: 650px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .modal-header h3 {
+            font-size: 18px;
+            color: #fff;
+        }
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .code-pre {
+            background: #1e1f22;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #a6d189;
+            overflow-x: auto;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        @media (max-width: 768px) {
+            .designs-grid {
+                grid-template-columns: 1fr;
+            }
+            header {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sticky Header -->
+    <header>
+        <div class="header-title">
+            <span class="badge-pill">Prototype Lab</span>
+            <h1>20 Discord Message Designs</h1>
+        </div>
+        <div class="controls">
+            <button class="filter-btn active" data-filter="all">All (20)</button>
+            <button class="filter-btn" data-filter="minimal">Minimal / Clean</button>
+            <button class="filter-btn" data-filter="buttons">With Buttons</button>
+            <button class="filter-btn" data-filter="hype">Hype / Drop</button>
+            <button class="filter-btn" data-filter="raw">Raw / CLI</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="intro-banner">
+            <div class="intro-text">
+                <h2>Browse 20 Real-World Prototypes</h2>
+                <p>Pick the design you like best. Click <strong>"Select This Design"</strong> on any card to copy its Python/Discord Webhook code.</p>
+            </div>
+            <div class="view-toggle">
+                <button class="view-btn active" id="viewGridBtn">2-Column Grid</button>
+                <button class="view-btn" id="viewSingleBtn">Phone View (Single)</button>
+            </div>
+        </div>
+
+        <div class="designs-grid" id="designsGrid">
+
+            <!-- DESIGN 1: Minimalist Stealth -->
+            <div class="design-card" data-category="minimal">
+                <div class="card-header-bar">
+                    <div>
+                        <span class="design-num">#01</span>
+                        <span class="design-name">Minimalist Stealth</span>
+                    </div>
+                    <span class="design-tag">Zero Slop</span>
+                </div>
+                <div class="discord-msg">
+                    <div class="discord-avatar" style="background: #10b981;">FK</div>
+                    <div class="discord-content">
+                        <div class="discord-author">
+                            <span class="author-name">MS Rewards Monitor</span>
+                            <span class="bot-tag">BOT</span>
+                            <span class="msg-time">Today at 12:00 PM</span>
+                        </div>
+                        <div class="ping-line"><span class="mention-tag">@everyone</span> Flipkart Gift Card restocked.</div>
+                        <div class="embed d1-embed">
+                            <a href="https://rewards.bing.com/redeem/sku/000885000034" class="embed-title">₹1,000 Flipkart Gift Card</a>
+                            <div class="d1-spec">
+                                <span>Points: <strong>19,320</strong></span>
+                                <span>Status: <strong style="color: #10b981;">Available</strong></span>
+                                <span>Time: <strong>Just now</strong></span>
+                            </div>
+                            <div class="embed-footer">Direct claim link: rewards.bing.com</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action-bar">
+                    <span style="font-size: 12px; color: var(--text-muted);">Ultra fast to read on phone</span>
+                    <button class="select-btn" onclick="selectDesign(1, 'Minimalist Stealth')">Select This Design</button>
+                </div>
+            </div>
+
+            <!-- DESIGN 2: Flipkart Brand Identity -->
+            <div class="design-card" data-category="buttons">
+                <div class="card-header-bar">
+                    <div>
+                        <span class="design-num">#02</span>
+                        <span class="design-name">Flipkart Official Brand</span>
+                    </div>
+                    <span class="design-tag">Branded</span>
+                </div>
+                <div class="discord-msg">
+                    <div class="discord-avatar" style="background: #2874f0;">🛒</div>
+                    <div class="discord-content">
+                        <div class="discord-author">
+                            <span class="author-name">Flipkart Sentinel</span>
+                            <span class="bot-tag">BOT</span>
+                            <span class="msg-time">Today at 12:00 PM</span>
+                        </div>
+                        <div class="ping-line"><span class="mention-tag">@everyone</span> Restock confirmed in India Catalog!</div>
+                        <div class="embed d2-embed">
+                            <div class="fk-pill">FLIPKART VOUCHER</div>
+                            <div><a href="https://rewards.bing.com/redeem/sku/000885000034" class="embed-title" style="color: #60a5fa;">₹1,000 Flipkart Gift Card</a></div>
+                            <div class="embed-desc">Cost: <strong>19,320 points</strong> (Level 2 Discount)</div>
+                            <div class="button-row">
+                                <a href="https://rewards.bing.com/redeem/sku/000885000034" class="discord-btn btn-fk">⚡ Claim ₹1,000 Voucher ↗</a>
+                            </div>
+                            <div class="embed-footer">Microsoft Rewards India • Verified Stock</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action-bar">
+                    <span style="font-size: 12px; color: var(--text-muted);">Iconic Flipkart blue & yellow</span>
+                    <button class="select-btn" onclick="selectDesign(2, 'Flipkart Official Brand')">Select This Design</button>
+                </div>
+            </div>
+
+            <!-- DESIGN 3: Terminal Hacker HUD -->
+            <div class="design-card" data-category="hype">
+                <div class="card-header-bar">
+                    <div>
+                        <span class="design-num">#03</span>
+                        <span class="design-name">Terminal Hacker HUD</span>
+                    </div>
+                    <span class="design-tag">Monospace</span>
+                </div>
+                <div class="discord-msg">
+                    <div class="discord-avatar" style="background: #000; color: #00ff66;">&gt;_</div>
+                    <div class="discord-content">
+                        <div class="discord-author">
+                            <span class="author-name">sys.sentinel</span>
+                            <span class="bot-tag">BOT</span>
+                            <span class="msg-time">Today at 12:00 PM</span>
+                        </div>
+                        <div class="ping-line"><span class="mention-tag">@everyone</span> <code>[EVENT: INVENTORY_STATE_CHANGED]</code></div>
+                        <div class="embed d3-embed">
+                            <div class="term-green">&gt; TARGET: FLIPKART_VOUCHER_1000</div>
+                            <div class="term-dim">&gt; SKU: 000885000034 | PTS: 19,320</div>
+                            <div class="term-green">&gt; STATUS: 200_IN_STOCK</div>
+                            <div style="margin-top: 8px;">
+                                <a href="https://rewards.bing.com/redeem/sku/000885000034" class="term-green" style="font-weight: 700;">[ EXECUTE REDEMPTION ➔ ]</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action-bar">
+                    <span style="font-size: 12px; color: var(--text-muted);">Matrix cyberpunk developer vibe</span>
+                    <button class="select-btn" onclick="selectDesign(3, 'Terminal Hacker HUD')">Select This Design</button>
+                </div>
+            </div>
+
+            <!-- DESIGN 4: Modern Bento Box -->
+            <div class="design-card" data-category="minimal">
+                <div class="card-header-bar">
+                    <div>
+                        <span class="design-num">#04</span>
+                        <span class="design-name">Modern Bento Grid</span>
+                    </div>
+                    <span class="design-tag">Clean UI</span>
+                </div>
+                <div class="discord-msg">
+                    <div class="discord-avatar" style="background: #3b82f6;">🎁</div>
+                    <div class="discord-content">
+                        <div class="discord-author">
+                            <span class="author-name">Rewards Drop</span>
+                            <span class="bot-tag">BOT</span>
+                            <span class="msg-time">Today at 12:00 PM</span>
+                        </div>
+                        <div class="ping-line"><span class="mention-tag">@everyone</span> New Drop Available</div>
+                        <div class="embed" style="border-left: 3px solid #3b82f6;">
+                            <a href="https://rewards.bing.com/redeem/sku/000885000034" class="embed-title">Flipkart Gift Card</a>
+                            <div class="bento-box">
+                                <div class="bento-item">
+                                    <div class="bento-label">Denomination</div>
+                                    <div class="bento-val">₹1,000</div>
+                                </div>
+                                <div class="bento-item">
+                                    <div class="bento-label">Required Points</div>
+                                    <div class="bento-val">19,320</div>
+                                </div>
+                                <div class="bento-item">
+                                    <div class="bento-label">Status</div>
+                                    <div class="bento-val" style="color: #22c55e;">In Stock</div>
+                                </div>
+                            </div>
+                            <a href="https://rewards.bing.com/redeem/sku/000885000034" style="color: #60a5fa; font-weight: 600; font-size: 13px;">Click to Redeem ➔</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action-bar">
+                    <span style="font-size: 12px; color: var(--text-muted);">Organized structured data boxes</span>
+                    <button class="select-btn" onclick="selectDesign(4, 'Modern Bento Grid')">Select This Design</button>
+                </div>
+            </div>
+
+            <!-- DESIGN 5: SneakerBot / AIO Drop Monitor -->
+            <div class="design-card" data-category="hype">
+                <div class="card-header-bar">
+                    <div>
+                        <span class="design-num">#05</span>
+                        <span class="design-name">AIO SneakerBot Style</span>
+                    </div>
+                    <span class="design-tag">Hype Drop</span>
+                </div>
+                <div class="discord-msg">
+                    <div class="discord-avatar" style="background: #ef4444;">⚡</div>
+                    <div class="discord-content">
+                        <div class="discord-author">
+                            <span class="author-name">FlashDrop Monitor</span>
+                            <span class="bot-tag">BOT</span>
+                            <span class="msg-time">Today at 12:00 PM</span>
+                        </div>
+                        <div class="ping-line"><span class="mention-tag">@everyone</span> <strong>FLIPKART RESTOCKED!</strong></div>
+                        <div class="embed d5-embed">
+                            <a href="https://rewards.bing.com/redeem/sku/000885000034" class="embed-title">Flipkart Gift Card (₹1,000)</a>
+                            <div class="hype-grid">
+                                <div><strong>PRICE:</strong> 19,320 pts</div>
+                                <div><strong>STOCK:</strong> LIVE NOW</div>
+                                <div><strong>REGION:</strong> INDIA (IN)</div>
+                                <div><strong>SPEED:</strong> INSTANT CLAIM</div>
+                            </div>
+                            <div class="button-row">
+                                <a href="https://rewards.bing.com/redeem/sku/000885000034" class="discord-btn btn-success">QUICK TASK / REDEEM ⚡</a>
+                                <a href="https://rewards.bing.com/redeem/in/shop" class="discord-btn btn-link">Catalog ↗</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action-bar">
+                    <span style="font-size: 12px; color: var(--text-muted);">High-intensity streetwear monitor look</span>
+                    <button class="select-btn" onclick="selectDesign(5, 'AIO SneakerBot Style')">Select This Design</button>
+                </div>
+            </div>
+
+            <!-- DESIGN 6: Discord Native Physical Button -->
+            <div class="design-card" data-category="buttons">
+                <div class="card-header-bar">
+                    <div>
+                        <span class="design-num">#06</span>
+                        <span class="design-name">Discord Native Buttons</span>
+                    </div>
+                    <span class="design-tag">Components V10</span>
+                </div>
+                <div class="discord-msg">
+                    <div class="discord-avatar" style="background: #5865f2;">🤖</div>
+                    <div class="discord-content">
+                        <div class="discord-author">
+                            <span class="author-name">MS Rewards</span>
+                            <span class="bot-tag">BOT</span>
+                            <span class="msg-time">Today at 12:00 PM</span>
+                        </div>
+                        <div class="ping-line"><span class="mention-tag">@everyone</span> Flipkart Gift Card is now redeemable.</div>
+                        <div class="embed d6-embed">
+                            <a href="https://rewards.bing.com/redeem/sku/000885000034" class="embed-title">₹1,000 Flipkart Voucher</a>
+                            <div class="embed-desc">19,320 points required • Microsoft Rewards India</div>
+                        </div>
+                        <div class="button-row" style="margin-top: 8px;">
+                            <a href="https://rewards.bing.com/redeem/sku/000885000034" class="discord-btn btn-primary">⚡ Redeem ₹1,000 Code ↗</a>
+                            <a href="https://rewards.bing.com/redeem/in/shop" class="discord-btn btn-link">Store Catalog ↗</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action-bar">
+                    <span style="font-size: 12px; color: var(--text-muted);">Real Discord UI link buttons</span>
+                    <button class="select-btn" onclick="selectDesign(6, 'Discord Native Buttons')">Select This Design</button>
+                </div>
+            </div>
+
+            <!-- DESIGN 7: Pure Raw Text (Zero Embed) -->
+            <div class="design-card" data-category="raw">
+                <div class="card-header-bar">
+                    <div>
+                        <span class="design-num">#07</span>
+                        <span class="design-name">Pure Raw Text / CLI</span>
+                    </div>
+                    <span class="design-tag">No Embed</span>
+                </div>
+                <div class="discord-msg">
+                    <div class="discord-avatar" style="background: #475569;">#</div>
+                    <div class="discord-content">
+                        <div class="discord-author">
+                            <span class="author-name">Alert</span>
+                            <span class="bot-tag">BOT</span>
+                            <span class="msg-time">Today at 12:00 PM</span>
+                        </div>
+                        <div class="raw-text-box">
+                            <span class="mention-tag">@everyone</span> <strong>Flipkart Gift Card (₹1,000) is in stock!</strong><br>
+                            &gt; Points: 19,320<br>
+                            &gt; Direct Link: <a href="https://rewards.bing.com/redeem/sku/000885000034" style="color: #60a5fa;">https://rewards.bing.com/redeem/sku/000885000034</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action-bar">
+                    <span style="font-size: 12px; color: var(--text-muted);">Zero styling, pure lightning speed</span>
+                    <button class="select-btn" onclick="selectDesign(7, 'Pure Raw Text / CLI')">Select This Design</button>
+                </div>
+            </div>
+
+            <!-- DESIGN 8: 1-Line Speedrun Ticker -->
+            <div class="design-card" data-category="minimal">
+                <div class="card-header-bar">
+                    <div>
+                        <span class="design-num">#08</span>
+                        <span class="design-name">1-Line Speedrun Ticker</span>
+                    </div>
+                    <span class="design-tag">Compact</span>
+                </div>
+                <div class="discord-msg">
+                    <div class="discord-avatar" style="background: #0284c7;">⚡</div>
+                    <div class="discord-content">
+                        <div class="discord-author">
+                            <span class="author-name">FastDrop</span>
+                            <span class="bot-tag">BOT</span>
+                            <span class="msg-time">Today at 12:00 PM</span>
+                        </div>
+                        <div class="ping-line"><span class="mention-tag">@everyone</span></div>
+                        <div class="d7-ticker">
+                            <span>🟢 <strong>FLIPKART ₹1000</strong> (19,320 pts)</span>
+                            <a href="https://rewards.bing.com/redeem/sku/000885000034" style="color: #00e5ff; font-weight: 700;">[REDEEM]</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action-bar">
+                    <span style="font-size: 12px; color: var(--text-muted);">Single line notification bar</span>
+                    <button class="select-btn" onclick="selectDesign(8, '1-Line Speedrun Ticker')">Select This Design</button>
+                </div>
+            </div>
+
+            <!-- DESIGN 9: Cyberpunk 2077 Neon -->
+            <div class="design-card" data-category="hype">
+                <div class="card-header-bar">
+                    <div>
+                        <span class="design-num">#09</span>
+                        <span class="design-name">Cyberpunk Neon</span>
+                    </div>
+                    <span class="design-tag">Vibrant</span>
+                </div>
+                <div class="discord-msg">
+                    <div class="discord-avatar" style="background: #fcee0a; color: #000;">CP</div>
+                    <div class="discord-content">
+                        <div class="discord-author">
+                            <span class="author-name">NetRunner</span>
+                            <span class="bot-tag">BOT</span>
+                            <span class="msg-time">Today at 12:00 PM</span>
+                        </div>
+                        <div class="ping-line"><span class="mention-tag">@everyone</span> // ACCESS_GRANTED: RESTOCK_DROP</div>
+                        <div class="embed d8-embed">
+                            <a href="https://rewards.bing.com/redeem/sku/000885000034" class="embed-title" style="color: #fcee0a;">// FLIPKART ₹1,000 VOUCHER</a>
+                            <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #00f0ff; margin-bottom: 8px;">
+                                [COST: 19,320 PTS] • [STATE: UNLOCKED]
+                            </div>
+                            <div class="button-row">
+                                <a href="https://rewards.bing.com/redeem/sku/000885000034" class="discord-btn" style="background: #fcee0a; color: #000; font-weight: 800;">JACK IN & CLAIM ⚡</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action-bar">
+                    <span style="font-size: 12px; color: var(--text-muted);">Yellow & cyan high-tech contrast</span>
+                    <button class="select-btn" onclick="selectDesign(9, 'Cyberpunk Neon')">Select This Design</button>
+                </div>
+            </div>
+
+            <!-- DESIGN 10: Bloomberg Market Terminal -->
+            <div class="design-card" data-category="minimal">
+                <div class="card-header-bar">
+                    <div>
+                        <span class="design-num">#10</span>
+                        <span class="design-name">Bloomberg Terminal</span>
+                    </div>
+                    <span class="design-tag">Finance</span>
+                </div>
+                <div class="discord-msg">
+                    <div class="discord-avatar" style="background: #ff9900; color: #000;">BB</div>
+                    <div class="discord-content">
+                        <div class="discord-author">
+                            <span class="author-name">MARKET FEED</span>
+                            <span class="bot-tag">BOT</span>
+                            <span class="msg-time">Today at 12:00 PM</span>
+                        </div>
+                        <div class="ping-line"><span class="mention-tag">@everyone</span> INVENTORY ALERT: FLIPKART INDIA</div>
+                        <div class="embed d9-embed">
+                            <div style="color: #ff9900; font-weight: 700; font-size: 14px;">TICKER: MSR-IN-FLIPKART</div>
+                            <div style="color: #d1d5db; font-size: 13px; margin: 6px 0;">
+                                ASK: 19,320 PTS | VAL: ₹1,000 | LIQUIDITY: HIGH
+                            </div>
+                            <a href="https://rewards.bing.com/redeem/sku/000885000034" style="color: #38bdf8; font-size: 12px;">GO TO ORDER BOOK ➔</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action-bar">
+                    <span style="font-size: 12px; color: var(--text-muted);">Stock trader analytical look</span>
+                    <button class="select-btn" onclick="selectDesign(10, 'Bloomberg Terminal')">Select This Design</button>
+                </div>
+            </div>
+
+            <!-- DESIGN 11: Legendary RPG Loot Card -->
+            <div class="design-card" data-category="hype">
+                <div class="card-header-bar">
+                    <div>
+                        <span class="design-num">#11</span>
+                        <span class="design-name">Legendary Loot Drop</span>
+                    </div>
+                    <span class="design-tag">Gaming</span>
+                </div>
+                <div class="discord-msg">
+                    <div class="discord-avatar" style="background: #ffb703; color: #000;">⭐</div>
+                    <div class="discord-content">
+                        <div class="discord-author">
+                            <span class="author-name">Loot Master</span>
+                            <span class="bot-tag">BOT</span>
+                            <span class="msg-time">Today at 12:00 PM</span>
+                        </div>
+                        <div class="ping-line"><span class="mention-tag">@everyone</span> ★★★★★ <strong>LEGENDARY DROP SPAWNED!</strong></div>
+                        <div class="embed d10-embed">
+                            <div style="color: #fbbf24; font-size: 11px; font-weight: 800; letter-spacing: 1px;">RARITY: LEGENDARY</div>
+                            <a href="https://rewards.bing.com/redeem/sku/000885000034" class="embed-title" style="color: #fef08a; font-size: 16px;">₹1,000 Flipkart Gift Card</a>
+                            <div class="embed-desc" style="color: #fef3c7;">Cost: <strong>19,320 Points</strong> • Instant Delivery</div>
+                            <div class="button-row">
+                                <a href="https://rewards.bing.com/redeem/sku/000885000034" class="discord-btn" style="background: #f59e0b; color: #000; font-weight: 800;">⚔️ LOOT NOW</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action-bar">
+                    <span style="font-size: 12px; color: var(--text-muted);">Gold gaming loot border</span>
+                    <button class="select-btn" onclick="selectDesign(11, 'Legendary Loot Drop')">Select This Design</button>
+                </div>
+            </div>
+
+            <!-- DESIGN 12: Clean Apple Style -->
+            <div class="design-card" data-category="minimal">
+                <div class="card-header-bar">
+                    <div>
+                        <span class="design-num">#12</span>
+                        <span class="design-name">Clean Modern Slate</span>
+                    </div>
+                    <span class="design-tag">Minimalist</span>
+                </div>
+                <div class="discord-msg">
+                    <div class="discord-avatar" style="background: #1e293b;">✦</div>
+                    <div class="discord-content">
+                        <div class="discord-author">
+                            <span class="author-name">Sentinel</span>
+                            <span class="bot-tag">BOT</span>
+                            <span class="msg-time">Today at 12:00 PM</span>
+                        </div>
+                        <div class="ping-line"><span class="mention-tag">@everyone</span></div>
+                        <div class="embed d4-embed">
+                            <div style="font-size: 11px; color: #94a3b8; font-weight: 600; text-transform: uppercase;">Microsoft Rewards</div>
+                            <a href="https://rewards.bing.com/redeem/sku/000885000034" class="embed-title" style="font-size: 16px; margin: 4px 0 6px;">₹1,000 Flipkart Card</a>
+                            <div style="font-size: 13px; color: #cbd5e1;">Available for <strong>19,320 pts</strong>.</div>
+                            <div style="margin-top: 10px;">
+                                <a href="https://rewards.bing.com/redeem/sku/000885000034" style="color: #38bdf8; font-weight: 600; font-size: 13px;">Redeem on Store ➔</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action-bar">
+                    <span style="font-size: 12px; color: var(--text-muted);">Sleek translucent glass styling</span>
+                    <button class="select-btn" onclick="selectDesign(12, 'Clean Modern Slate')">Select This Design</button>
+                </div>
+            </div>
+
+            <!-- DESIGN 13: Emergency Flash Drop -->
+            <div class="design-card" data-category="hype">
+                <div class="card-header-bar">
+                    <div>
+                        <span class="design-num">#13</span>
+                        <span class="design-name">Emergency Flash Drop</span>
+                    </div>
+                    <span class="design-tag">High Urgency</span>
+                </div>
+                <div class="discord-msg">
+                    <div class="discord-avatar" style="background: #dc2626;">🚨</div>
+                    <div class="discord-content">
+                        <div class="discord-author">
+                            <span class="author-name">Restock Alarm</span>
+                            <span class="bot-tag">BOT</span>
+                            <span class="msg-time">Today at 12:00 PM</span>
+                        </div>
+                        <div class="ping-line"><span class="mention-tag">@everyone</span> <strong>DROP LIVE! BATCH DRAINING FAST!</strong></div>
+                        <div class="embed" style="border-left: 4px solid #dc2626; background: #221518;">
+                            <a href="https://rewards.bing.com/redeem/sku/000885000034" class="embed-title" style="color: #fca5a5;">₹1,000 Flipkart Gift Card</a>
+                            <div class="embed-desc">Cost: <strong>19,320 pts</strong> • Stocks sell out in minutes!</div>
+                            <div class="button-row">
+                                <a href="https://rewards.bing.com/redeem/sku/000885000034" class="discord-btn" style="background: #dc2626; color: #fff; font-weight: 800;">CLAIM BEFORE GONE ➔</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action-bar">
+                    <span style="font-size: 12px; color: var(--text-muted);">High-contrast red urgency alert</span>
+                    <button class="select-btn" onclick="selectDesign(13, 'Emergency Flash Drop')">Select This Design</button>
+                </div>
+            </div>
+
+            <!-- DESIGN 14: Dark Gold Prestige -->
+            <div class="design-card" data-category="minimal">
+                <div class="card-header-bar">
+                    <div>
+                        <span class="design-num">#14</span>
+                        <span class="design-name">Dark Gold Prestige</span>
+                    </div>
+                    <span class="design-tag">Sophisticated</span>
+                </div>
+                <div class="discord-msg">
+                    <div class="discord-avatar" style="background: #d97706;">✦</div>
+                    <div class="discord-content">
+                        <div class="discord-author">
+                            <span class="author-name">Sentinel Elite</span>
+                            <span class="bot-tag">BOT</span>
+                            <span class="msg-time">Today at 12:00 PM</span>
+                        </div>
+                        <div class="ping-line"><span class="mention-tag">@everyone</span> Flipkart Gift Card is in stock.</div>
+                        <div class="embed" style="border-left: 3px solid #d97706; background: #23201a;">
+                            <a href="https://rewards.bing.com/redeem/sku/000885000034" class="embed-title" style="color: #fcd34d;">₹1,000 Flipkart Voucher</a>
+                            <div class="embed-desc" style="color: #fde68a;">Points: 19,320 • Active batch</div>
+                            <div class="embed-footer" style="color: #b45309;">Verified in stock via SKU 000885000034</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action-bar">
+                    <span style="font-size: 12px; color: var(--text-muted);">Subtle dark amber palette</span>
+                    <button class="select-btn" onclick="selectDesign(14, 'Dark Gold Prestige')">Select This Design</button>
+                </div>
+            </div>
+
+            <!-- DESIGN 15: Dual Quick-Action Buttons -->
+            <div class="design-card" data-category="buttons">
+                <div class="card-header-bar">
+                    <div>
+                        <span class="design-num">#15</span>
+                        <span class="design-name">Dual Action Split</span>
+                    </div>
+                    <span class="design-tag">Multi-link</span>
+                </div>
+                <div class="discord-msg">
+                    <div class="discord-avatar" style="background: #2563eb;">⚡</div>
+                    <div class="discord-content">
+                        <div class="discord-author">
+                            <span class="author-name">MS Rewards Bot</span>
+                            <span class="bot-tag">BOT</span>
+                            <span class="msg-time">Today at 12:00 PM</span>
+                        </div>
+                        <div class="ping-line"><span class="mention-tag">@everyone</span> Restock is live now!</div>
+                        <div class="embed" style="border-left: 3px solid #2563eb;">
+                            <a href="https://rewards.bing.com/redeem/sku/000885000034" class="embed-title">₹1,000 Flipkart Card</a>
+                            <div class="embed-desc">19,320 points • Microsoft Rewards India</div>
+                        </div>
+                        <div class="button-row">
+                            <a href="https://rewards.bing.com/redeem/sku/000885000034" class="discord-btn btn-fk">Direct SKU Link ➔</a>
+                            <a href="https://rewards.bing.com/redeem/in/shop" class="discord-btn btn-link">Browse Catalog ↗</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action-bar">
+                    <span style="font-size: 12px; color: var(--text-muted);">Both direct SKU and catalog buttons</span>
+                    <button class="select-btn" onclick="selectDesign(15, 'Dual Action Split')">Select This Design</button>
+                </div>
+            </div>
+
+            <!-- DESIGN 16: Codeblock Telemetry -->
+            <div class="design-card" data-category="raw">
+                <div class="card-header-bar">
+                    <div>
+                        <span class="design-num">#16</span>
+                        <span class="design-name">Codeblock Telemetry</span>
+                    </div>
+                    <span class="design-tag">Developer</span>
+                </div>
+                <div class="discord-msg">
+                    <div class="discord-avatar" style="background: #334155;">//</div>
+                    <div class="discord-content">
+                        <div class="discord-author">
+                            <span class="author-name">msr-bot</span>
+                            <span class="bot-tag">BOT</span>
+                            <span class="msg-time">Today at 12:00 PM</span>
+                        </div>
+                        <div class="ping-line"><span class="mention-tag">@everyone</span></div>
+                        <div class="raw-text-box" style="background: #0f172a; border-color: #1e293b;">
+                            <span style="color: #38bdf8;">[RESTOCK_ALERT]</span><br>
+                            item: "Flipkart Gift Card"<br>
+                            denomination: "₹1,000"<br>
+                            points: 19320<br>
+                            url: <a href="https://rewards.bing.com/redeem/sku/000885000034" style="color: #4ade80;">https://rewards.bing.com/redeem/sku/000885000034</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action-bar">
+                    <span style="font-size: 12px; color: var(--text-muted);">Clean JSON-like key value block</span>
+                    <button class="select-btn" onclick="selectDesign(16, 'Codeblock Telemetry')">Select This Design</button>
+                </div>
+            </div>
+
+            <!-- DESIGN 17: Indigo Radial Glow -->
+            <div class="design-card" data-category="hype">
+                <div class="card-header-bar">
+                    <div>
+                        <span class="design-num">#17</span>
+                        <span class="design-name">Indigo Glow Card</span>
+                    </div>
+                    <span class="design-tag">Vibrant</span>
+                </div>
+                <div class="discord-msg">
+                    <div class="discord-avatar" style="background: #6366f1;">✨</div>
+                    <div class="discord-content">
+                        <div class="discord-author">
+                            <span class="author-name">Rewards Radar</span>
+                            <span class="bot-tag">BOT</span>
+                            <span class="msg-time">Today at 12:00 PM</span>
+                        </div>
+                        <div class="ping-line"><span class="mention-tag">@everyone</span> Restock drop detected!</div>
+                        <div class="embed" style="border-left: 3px solid #818cf8; background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(30, 31, 34, 1) 100%);">
+                            <a href="https://rewards.bing.com/redeem/sku/000885000034" class="embed-title" style="color: #c7d2fe;">₹1,000 Flipkart Gift Card</a>
+                            <div class="embed-desc" style="color: #e0e7ff;">19,320 pts • Batch is live right now</div>
+                            <div class="button-row">
+                                <a href="https://rewards.bing.com/redeem/sku/000885000034" class="discord-btn" style="background: #6366f1; color: #fff; font-weight: 700;">Claim Voucher ⚡</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action-bar">
+                    <span style="font-size: 12px; color: var(--text-muted);">Deep purple/indigo ambient glow</span>
+                    <button class="select-btn" onclick="selectDesign(17, 'Indigo Glow Card')">Select This Design</button>
+                </div>
+            </div>
+
+            <!-- DESIGN 18: Nordic Frosted Slate -->
+            <div class="design-card" data-category="minimal">
+                <div class="card-header-bar">
+                    <div>
+                        <span class="design-num">#18</span>
+                        <span class="design-name">Nordic Frosted Slate</span>
+                    </div>
+                    <span class="design-tag">Nordic</span>
+                </div>
+                <div class="discord-msg">
+                    <div class="discord-avatar" style="background: #0ea5e9;">❄️</div>
+                    <div class="discord-content">
+                        <div class="discord-author">
+                            <span class="author-name">Voucher Guard</span>
+                            <span class="bot-tag">BOT</span>
+                            <span class="msg-time">Today at 12:00 PM</span>
+                        </div>
+                        <div class="ping-line"><span class="mention-tag">@everyone</span></div>
+                        <div class="embed" style="border-left: 3px solid #38bdf8; background: #182026;">
+                            <a href="https://rewards.bing.com/redeem/sku/000885000034" class="embed-title" style="color: #e0f2fe;">Flipkart Card (₹1,000)</a>
+                            <div style="font-size: 13px; color: #bae6fd;">Cost: 19,320 pts • <a href="https://rewards.bing.com/redeem/sku/000885000034" style="color: #38bdf8; font-weight: 600;">Redeem Link</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action-bar">
+                    <span style="font-size: 12px; color: var(--text-muted);">Icy blue calm minimalist palette</span>
+                    <button class="select-btn" onclick="selectDesign(18, 'Nordic Frosted Slate')">Select This Design</button>
+                </div>
+            </div>
+
+            <!-- DESIGN 19: High-Density Monospace -->
+            <div class="design-card" data-category="raw">
+                <div class="card-header-bar">
+                    <div>
+                        <span class="design-num">#19</span>
+                        <span class="design-name">High-Density Monospace</span>
+                    </div>
+                    <span class="design-tag">Micro</span>
+                </div>
+                <div class="discord-msg">
+                    <div class="discord-avatar" style="background: #14532d; color: #4ade80;">$</div>
+                    <div class="discord-content">
+                        <div class="discord-author">
+                            <span class="author-name">MSR Sentinel</span>
+                            <span class="bot-tag">BOT</span>
+                            <span class="msg-time">Today at 12:00 PM</span>
+                        </div>
+                        <div class="raw-text-box" style="font-size: 12px; padding: 8px 12px;">
+                            <span class="mention-tag">@everyone</span> <strong>[RESTOCK]</strong> ₹1000 Flipkart GC (19,320 pts) &gt;&gt; <a href="https://rewards.bing.com/redeem/sku/000885000034" style="color: #4ade80;">CLAIM NOW</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action-bar">
+                    <span style="font-size: 12px; color: var(--text-muted);">Micro compact chat ticker</span>
+                    <button class="select-btn" onclick="selectDesign(19, 'High-Density Monospace')">Select This Design</button>
+                </div>
+            </div>
+
+            <!-- DESIGN 20: Emerald Verified In-Stock -->
+            <div class="design-card" data-category="buttons">
+                <div class="card-header-bar">
+                    <div>
+                        <span class="design-num">#20</span>
+                        <span class="design-name">Emerald Verified In-Stock</span>
+                    </div>
+                    <span class="design-tag">Verified</span>
+                </div>
+                <div class="discord-msg">
+                    <div class="discord-avatar" style="background: #059669;">✓</div>
+                    <div class="discord-content">
+                        <div class="discord-author">
+                            <span class="author-name">Stock Sentinel</span>
+                            <span class="bot-tag">BOT</span>
+                            <span class="msg-time">Today at 12:00 PM</span>
+                        </div>
+                        <div class="ping-line"><span class="mention-tag">@everyone</span> Restock drop verified.</div>
+                        <div class="embed" style="border-left: 3px solid #10b981; background: #16241e;">
+                            <a href="https://rewards.bing.com/redeem/sku/000885000034" class="embed-title" style="color: #a7f3d0;">₹1,000 Flipkart Gift Card</a>
+                            <div class="embed-desc" style="color: #d1fae5;">19,320 pts • Status: <strong>Confirmed Live</strong></div>
+                            <div class="button-row">
+                                <a href="https://rewards.bing.com/redeem/sku/000885000034" class="discord-btn btn-success">⚡ Redeem Now ➔</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action-bar">
+                    <span style="font-size: 12px; color: var(--text-muted);">Clean green verified success aesthetic</span>
+                    <button class="select-btn" onclick="selectDesign(20, 'Emerald Verified In-Stock')">Select This Design</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast">
+        <span>✓</span> <span id="toastMsg">Design selected!</span>
+    </div>
+
+    <!-- Modal to View / Copy Code -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modalTitle">Selected Design</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
+                Here is the exact Python payload configuration for <code>sentinel.py</code>:
+            </p>
+            <pre class="code-pre" id="modalCode"></pre>
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button class="select-btn" onclick="copyModalCode()">📋 Copy Python Code</button>
+                <button class="select-btn" style="background: #23a55a; border-color: #23a55a;" onclick="applyDesignToRepo()">🚀 Apply to Repo Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Filters
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const cards = document.querySelectorAll('.design-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const filter = btn.getAttribute('data-filter');
+
+                cards.forEach(card => {
+                    if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // View toggle (Grid vs Phone view)
+        const gridBtn = document.getElementById('viewGridBtn');
+        const singleBtn = document.getElementById('viewSingleBtn');
+        const grid = document.getElementById('designsGrid');
+
+        gridBtn.addEventListener('click', () => {
+            gridBtn.classList.add('active');
+            singleBtn.classList.remove('active');
+            grid.classList.remove('compact-view');
+        });
+
+        singleBtn.addEventListener('click', () => {
+            singleBtn.classList.add('active');
+            gridBtn.classList.remove('active');
+            grid.classList.add('compact-view');
+        });
+
+        // Select Design function
+        let currentSelectedDesign = null;
+
+        function selectDesign(id, name) {
+            currentSelectedDesign = { id, name };
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = `Design #${id} (${name}) selected!`;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+
+            // Open modal with code
+            document.getElementById('modalTitle').innerText = `Design #${id}: ${name}`;
+            document.getElementById('modalCode').innerText = generatePythonPayload(id, name);
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        function copyModalCode() {
+            const code = document.getElementById('modalCode').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Copied to clipboard!');
+            });
+        }
+
+        function applyDesignToRepo() {
+            alert(`Great choice! Tell Antigravity in the chat: "Design #${currentSelectedDesign.id} laga de" and it will immediately apply this design to your repo and push it to GitHub!`);
+            closeModal();
+        }
+
+        function generatePythonPayload(id, name) {
+            if (id === 7 || id === 19) {
+                // Raw text style
+                return `payload = {
+    "content": f"@everyone **Flipkart Gift Card ({display_title}) is in stock!**\\n> Points: {points_display}\\n> Direct Link: {direct_link}"
+}`;
+            }
+
+            if (id === 6 || id === 2 || id === 15 || id === 20) {
+                // With Native Discord Link Button
+                return `payload = {
+    "content": f"@everyone Flipkart Gift Card restocked ({display_title})",
+    "embeds": [
+        {
+            "title": f"{display_title}",
+            "url": direct_link,
+            "description": f"Cost: **{points_display}** • Microsoft Rewards India",
+            "color": 2651376  # Flipkart Blue (#2874F0)
+        }
+    ],
+    "components": [
+        {
+            "type": 1,
+            "components": [
+                {
+                    "type": 2,
+                    "style": 5,
+                    "label": f"⚡ Claim {display_title} ↗",
+                    "url": direct_link
+                }
+            ]
+        }
+    ]
+}`;
+            }
+
+            // Minimalist Embed style
+            return `payload = {
+    "content": f"@everyone Flipkart Gift Card in stock.",
+    "embeds": [
+        {
+            "title": f"{display_title}",
+            "url": direct_link,
+            "description": f"**Cost:** {points_display}\\n**Time:** <t:{int(time.time())}:R>\\n\\n[**Claim Voucher on Store ➔**]({direct_link})",
+            "color": 1096065  # Emerald (#10B981)
+        }
+    ]
+}`;
+        }
+    </script>
+</body>
+</html>
