@@ -183,18 +183,20 @@ def post_alert(card_title, full_title, points, redeem_url, image_url, timestamp)
             break
 
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    banner_local_path = os.path.join(base_dir, "assets", "flipkart_banner.jpg")
+    banner_local_path = os.path.join(base_dir, "assets", "flipkart_banner.png")
+    if not os.path.exists(banner_local_path):
+        banner_local_path = os.path.join(base_dir, "assets", "flipkart_banner.jpg")
     has_local_banner = os.path.exists(banner_local_path) and "flipkart" in display_title.lower()
+    banner_filename = os.path.basename(banner_local_path)
+    banner_mime = "image/png" if banner_filename.endswith(".png") else "image/jpeg"
 
     embed = {
-        "title": f"{denomination} Flipkart Gift Card ({points_display})",
-        "url": direct_link,
         "color": 2651376,  # Flipkart Royal Blue (#2874F0)
         "footer": {"text": "Microsoft Rewards India • Live Verified Stock"}
     }
 
     if has_local_banner:
-        embed["image"] = {"url": "attachment://flipkart_banner.jpg"}
+        embed["image"] = {"url": f"attachment://{banner_filename}"}
     elif image_url:
         embed["image"] = {"url": image_url}
 
@@ -208,7 +210,7 @@ def post_alert(card_title, full_title, points, redeem_url, image_url, timestamp)
                     {
                         "type": 2,
                         "style": 5,
-                        "label": f"⚡ Claim {denomination} on Store ↗",
+                        "label": "Redemption site",
                         "url": direct_link
                     }
                 ]
@@ -224,7 +226,7 @@ def post_alert(card_title, full_title, points, redeem_url, image_url, timestamp)
 
         if has_local_banner:
             with open(banner_local_path, "rb") as f:
-                files = {"files[0]": ("flipkart_banner.jpg", f, "image/jpeg")}
+                files = {"files[0]": (banner_filename, f, banner_mime)}
                 res = requests.post(webhook_endpoint, data={"payload_json": json.dumps(payload)}, files=files, timeout=12)
         else:
             res = requests.post(webhook_endpoint, json=payload, timeout=10)
@@ -236,7 +238,7 @@ def post_alert(card_title, full_title, points, redeem_url, image_url, timestamp)
             payload_fallback = {"content": payload["content"], "embeds": payload["embeds"]}
             if has_local_banner:
                 with open(banner_local_path, "rb") as f:
-                    files = {"files[0]": ("flipkart_banner.jpg", f, "image/jpeg")}
+                    files = {"files[0]": (banner_filename, f, banner_mime)}
                     res_fb = requests.post(DISCORD_WEBHOOK_URL, data={"payload_json": json.dumps(payload_fallback)}, files=files, timeout=12)
             else:
                 res_fb = requests.post(DISCORD_WEBHOOK_URL, json=payload_fallback, timeout=10)
